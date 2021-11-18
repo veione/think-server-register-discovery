@@ -1,16 +1,15 @@
 package com.think.logic;
 
-import com.think.common.config.ServiceConfig;
+import com.think.common.constants.ZkNode;
+import com.think.common.registry.ServiceDiscover;
+import com.think.common.registry.ServicePayload;
 import com.think.logic.config.LogicConfig;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.state.ConnectionState;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.curator.x.discovery.ServiceCache;
-import org.apache.curator.x.discovery.ServiceDiscovery;
-import org.apache.curator.x.discovery.ServiceDiscoveryBuilder;
 import org.apache.curator.x.discovery.ServiceInstance;
-import org.apache.curator.x.discovery.details.JsonInstanceSerializer;
 import org.apache.curator.x.discovery.details.ServiceCacheListener;
 import org.yaml.snakeyaml.Yaml;
 
@@ -25,6 +24,7 @@ import java.util.Map;
  * @author veione
  */
 public class LogicApplication {
+    private static ServiceDiscover serviceDiscover;
 
     public static void main(String[] args) {
         initConfig();
@@ -32,25 +32,18 @@ public class LogicApplication {
         CuratorFramework client = CuratorFrameworkFactory.newClient(LogicConfig.zookeeper, new ExponentialBackoffRetry(3000, 3));
         try {
             client.start();
-            JsonInstanceSerializer<ServiceConfig> serializer = new JsonInstanceSerializer<>(ServiceConfig.class);
-            ServiceDiscovery serviceDiscovery = ServiceDiscoveryBuilder.builder(ServiceConfig.class)
-                    .client(client)
-                    .basePath("think/gate")
-                    .serializer(serializer)
-                    .thisInstance(null)
-                    .build();
+            serviceDiscover = new ServiceDiscover(client, ZkNode.ZK_GATE_BASE_PATH);
+            serviceDiscover.start();
 
-            serviceDiscovery.start();
-
-            ServiceCache<ServiceConfig> serverServiceCache = serviceDiscovery.serviceCacheBuilder().name("server").build();
-            serverServiceCache.addListener(new ServiceCacheListener() {
+            ServiceCache<ServicePayload> serviceCache = serviceDiscover.newServiceCache("server");
+            serviceCache.addListener(new ServiceCacheListener() {
                 @Override
                 public void cacheChanged() {
-                    System.out.println("gate service change " + serverServiceCache.getInstances().size());
-                    serverServiceCache.getInstances().forEach(it -> {
+                    System.out.println("gate service change " + serviceCache.getInstances().size());
+                    serviceCache.getInstances().forEach(it -> {
                         System.out.println("now gate:" + it.getId() + " " + it.getAddress() + "" + it.getPort());
                     });
-                    updateGateServer(serverServiceCache.getInstances());
+                    updateGateServer(serviceCache.getInstances());
                 }
 
                 @Override
@@ -58,7 +51,15 @@ public class LogicApplication {
 
                 }
             });
-            serverServiceCache.start();
+            updateGateServer(serviceCache.getInstances());
+
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                try {
+                    serviceDiscover.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }));
 
             Thread.sleep(Long.MAX_VALUE);
         } catch (Exception e) {
@@ -66,7 +67,7 @@ public class LogicApplication {
         }
     }
 
-    private static void updateGateServer(List<ServiceInstance<ServiceConfig>> instances) {
+    private static void updateGateServer(List<ServiceInstance<ServicePayload>> instances) {
         System.out.println("网关服务器列表：" + instances);
         // 连接到网关服务器
     }

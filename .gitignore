@@ -2,3 +2,8 @@
 /think-common/target/
 /think-gate/target/
 /think-logic/target/
+.idea
+log/
+logs/
+*.iml
+target/
