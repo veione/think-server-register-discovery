@@ -1,0 +1,4 @@
+# Project exclude paths
+/think-common/target/
+/think-gate/target/
+/think-logic/target/
