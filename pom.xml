@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.think</groupId>
-    <artifactId>think-server</artifactId>
+    <artifactId>think-server-registry-discovery</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0</version>
     <modules>
+        <module>think-common</module>
         <module>think-gate</module>
         <module>think-logic</module>
-        <module>think-common</module>
     </modules>
 
     <properties>
