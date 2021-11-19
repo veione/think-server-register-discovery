@@ -13,14 +13,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.think</groupId>
             <artifactId>think-common</artifactId>
             <version>1.0.0</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 

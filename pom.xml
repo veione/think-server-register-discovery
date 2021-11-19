@@ -19,16 +19,30 @@
         <maven.compiler.target>8</maven.compiler.target>
         <netty.version>4.1.68.Final</netty.version>
         <curator.version>5.2.0</curator.version>
-        <yaml.version>1.29</yaml.version>
         <fastjson.version>1.2.78</fastjson.version>
+        <slf4j.version>1.7.32</slf4j.version>
+        <logback.version>1.2.7</logback.version>
+        <protostuff.version>1.7.4</protostuff.version>
+        <protobuf.version>3.19.1</protobuf.version>
+        <objenesis.version>3.2</objenesis.version>
+        <config.version>1.4.1</config.version>
     </properties>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-all</artifactId>
                 <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.curator</groupId>
@@ -46,14 +60,39 @@
                 <version>${curator.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.yaml</groupId>
-                <artifactId>snakeyaml</artifactId>
-                <version>${yaml.version}</version>
+                <groupId>com.typesafe</groupId>
+                <artifactId>config</artifactId>
+                <version>${config.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-core</artifactId>
+                <version>${protostuff.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-core</artifactId>
+                <version>${protostuff.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-runtime</artifactId>
+                <version>${protostuff.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.objenesis</groupId>
+                <artifactId>objenesis</artifactId>
+                <version>${objenesis.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

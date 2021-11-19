@@ -3,6 +3,7 @@
 /think-gate/target/
 /think-logic/target/
 .idea
+.idea
 log/
 logs/
 *.iml
